@@ -1,5 +1,6 @@
 package ch.empros.kmap
 
+import java.math.BigDecimal
 import java.sql.Date
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,6 +27,7 @@ object H2MemoryDatabaseData {
   val FLOAT_DISCOUNT = "float_discount".toUpperCase()
   val DOUBLE_DISCOUNT = "double_discount".toUpperCase()
   val SIZE = "size".toUpperCase()
+  val VALUATION = "vauation".toUpperCase()
 
   val VAL_BIRTH_DATE = "1966-01-17"
   val VAL_FIRSTNAME = "Vorname"
@@ -34,6 +36,7 @@ object H2MemoryDatabaseData {
   val VAL_DOUBLE_DISCOUNT = 1.5
   val VAL_FLOAT_DISCOUNT = .5f
   val VAL_SIZE = 10L
+  val VAL_VALUATION = BigDecimal(2.5)
 
   @Throws(Exception::class)
   @JvmStatic fun main(args: Array<String>) {
@@ -72,8 +75,8 @@ object H2MemoryDatabaseData {
 
   private fun runSetupQueries(connection: java.sql.Connection, size: Int) {
 
-    val CreateQuery = "CREATE TABLE PERSON($ID int primary key, $FIRSTNAME varchar(100), $LASTNAME varchar(100), $ACTIVE boolean, $BIRTH_DATE date, $FLOAT_DISCOUNT real, $DOUBLE_DISCOUNT double, $SIZE bigint)"
-    val InsertQuery = "INSERT INTO PERSON ($ID, $FIRSTNAME, $LASTNAME, $ACTIVE, $BIRTH_DATE, $FLOAT_DISCOUNT, $DOUBLE_DISCOUNT, $SIZE) values (?,?,?,?,?,?,?,?)"
+    val CreateQuery = "CREATE TABLE PERSON($ID int primary key, $FIRSTNAME varchar(100), $LASTNAME varchar(100), $ACTIVE boolean, $BIRTH_DATE date, $FLOAT_DISCOUNT real, $DOUBLE_DISCOUNT double, $SIZE bigint, $VALUATION decimal)"
+    val InsertQuery = "INSERT INTO PERSON ($ID, $FIRSTNAME, $LASTNAME, $ACTIVE, $BIRTH_DATE, $FLOAT_DISCOUNT, $DOUBLE_DISCOUNT, $SIZE, $VALUATION) values (?,?,?,?,?,?,?,?,?)"
 
     connection.autoCommit = false
 
@@ -91,6 +94,7 @@ object H2MemoryDatabaseData {
         setFloat(6, VAL_FLOAT_DISCOUNT)
         setDouble(7, VAL_DOUBLE_DISCOUNT)
         setLong(8, VAL_SIZE.toLong())
+        setBigDecimal(9, VAL_VALUATION)
         executeUpdate()
       }
       close()

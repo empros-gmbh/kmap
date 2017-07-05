@@ -8,6 +8,7 @@ import ch.empros.kmap.H2MemoryDatabaseData.FLOAT_DISCOUNT
 import ch.empros.kmap.H2MemoryDatabaseData.ID
 import ch.empros.kmap.H2MemoryDatabaseData.LASTNAME
 import ch.empros.kmap.H2MemoryDatabaseData.SIZE
+import ch.empros.kmap.H2MemoryDatabaseData.VALUATION
 import ch.empros.kmap.H2MemoryDatabaseData.VAL_BIRTH_DATE
 import ch.empros.kmap.H2MemoryDatabaseData.VAL_FIRSTNAME
 import ch.empros.kmap.H2MemoryDatabaseData.VAL_LASTNAME
@@ -15,6 +16,7 @@ import ch.empros.kmap.H2MemoryDatabaseData.VAL_SIZE
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import java.math.BigDecimal
 import java.sql.Date
 import java.sql.ResultSet
 import kotlin.test.assertEquals
@@ -97,6 +99,11 @@ class MetaDataTest : BaseTestFixture() {
   @Test fun `LongColumn size`() {
     assertTrue(metaData[SIZE] is LongColumn, "Expected LongColumn but got: ${metaData[SIZE]::class}")
     assertEquals(Long::class, (metaData[SIZE] as LongColumn).getVmType())
+  }
+
+  @Test fun `DecimalColumn valuation`() {
+    assertTrue(metaData[VALUATION] is BigDecimalColumn, "Expected BigDecimalColumn but got: ${metaData[VALUATION]::class}")
+    assertEquals(BigDecimal::class, (metaData[VALUATION] as BigDecimalColumn).getVmType())
   }
 }
 

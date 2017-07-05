@@ -33,7 +33,7 @@ class KMapTest {
     KMap.pageObservableFrom(supplier, SqlQuery(SQL_SELECT_PERSON, pageSize = pageSize, startPage = 1))
       .take(1)
       .flatMap { page -> page.recordObs() }
-      .map { rec -> rec.value(ID) }
+      .map { rec -> rec.value(ID)!! }
       .test()
       .assertValueSequence(expected)
       .assertComplete()
