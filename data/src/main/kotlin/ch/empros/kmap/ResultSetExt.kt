@@ -23,7 +23,7 @@ fun ResultSet.kMapMetaData(): MetaData =
             Types.BIGINT -> LongColumn(name, label)
             Types.NUMERIC, Types.DECIMAL -> BigDecimalColumn(name, label)
             Types.TIMESTAMP -> DateColumn(name, label)
-            Types.VARCHAR, Types.NVARCHAR, Types.LONGNVARCHAR, Types.LONGVARCHAR -> StringColumn(name, label, getColumnDisplaySize(i))
+            Types.VARCHAR, Types.NCHAR, Types.NVARCHAR, Types.LONGNVARCHAR, Types.LONGVARCHAR -> StringColumn(name, label, getColumnDisplaySize(i))
             else -> throw IllegalArgumentException("KMap ResultSet Mapping: Unsupported SQL-Type '$ctype'")
           }
         }
