@@ -31,6 +31,11 @@ data class StringColumn(override val name: ColumnName,
   override fun getVmType() = String::class
 }
 
+data class ClobColumn(override val name: ColumnName,
+                      override val label: ColumnName = name) : KmColumn(name, label) {
+  override fun getVmType(): KClass<String> = String::class
+}
+
 data class BooleanColumn(override val name: ColumnName,
                          override val label: ColumnName = name) : KmColumn(name, label) {
   override fun getVmType() = Boolean::class

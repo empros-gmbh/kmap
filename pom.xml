@@ -31,7 +31,7 @@ SOFTWARE.
 
     <groupId>ch.empros</groupId>
     <artifactId>kmap</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
 
     <name>KMap</name>
     <description>JDBC mapping pipeline using Rx and Kotlin</description>
@@ -58,7 +58,7 @@ SOFTWARE.
     </modules>
 
     <properties>
-        <kotlin.version>1.1.2-4</kotlin.version>
+        <kotlin.version>1.2.10</kotlin.version>
         <junit.version>4.12</junit.version>
     </properties>
 

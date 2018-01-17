@@ -2,6 +2,7 @@ package ch.empros.kmap
 
 import ch.empros.kmap.H2MemoryDatabaseData.ACTIVE
 import ch.empros.kmap.H2MemoryDatabaseData.BIRTH_DATE
+import ch.empros.kmap.H2MemoryDatabaseData.DOC
 import ch.empros.kmap.H2MemoryDatabaseData.DOUBLE_DISCOUNT
 import ch.empros.kmap.H2MemoryDatabaseData.FIRSTNAME
 import ch.empros.kmap.H2MemoryDatabaseData.FLOAT_DISCOUNT
@@ -64,6 +65,11 @@ class MetaDataTest : BaseTestFixture() {
   @Test fun `IntColumn id`() {
     assertTrue(metaData[ID] is IntColumn)
     assertEquals(Int::class, (metaData[ID] as IntColumn).getVmType())
+  }
+
+  @Test fun `ClobColumn doc`() {
+    assertTrue(metaData[DOC] is ClobColumn)
+    assertEquals(String::class, (metaData[DOC] as ClobColumn).getVmType())
   }
 
   @Test fun `StringColumn firstname`() {

@@ -1,5 +1,6 @@
 package ch.empros.kmap
 
+import java.io.Reader
 import java.sql.ResultSet
 import java.sql.Types
 
@@ -16,6 +17,7 @@ fun ResultSet.kMapMetaData(): MetaData =
           val ctype = getColumnType(i)
           when (ctype) {
             Types.BOOLEAN -> BooleanColumn(name, label)
+            Types.CLOB -> ClobColumn(name, label)
             Types.DATE -> DateColumn(name, label)
             Types.FLOAT, Types.REAL -> FloatColumn(name, label)
             Types.DOUBLE -> DoubleColumn(name, label)
@@ -72,6 +74,7 @@ fun ResultSet.currentRecord(metaData: MetaData = kMapMetaData()): Record {
       is LongColumn -> this.getLong(kmColumn.label)
       is IntColumn -> this.getInt(kmColumn.label)
       is StringColumn -> this.getString(kmColumn.label)
+      is ClobColumn -> this.getClob(kmColumn.label).characterStream.readText()
     }
     value
   }.toList()
