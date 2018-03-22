@@ -24,7 +24,7 @@ fun ResultSet.kMapMetaData(): MetaData =
             Types.INTEGER -> IntColumn(name, label)
             Types.BIGINT -> LongColumn(name, label)
             Types.NUMERIC, Types.DECIMAL -> BigDecimalColumn(name, label)
-            Types.TIMESTAMP -> DateColumn(name, label)
+            Types.TIMESTAMP -> DateTimeColumn(name, label)
             Types.VARCHAR, Types.NCHAR, Types.NVARCHAR, Types.LONGNVARCHAR, Types.LONGVARCHAR -> StringColumn(name, label, getColumnDisplaySize(i))
             else -> throw IllegalArgumentException("KMap ResultSet Mapping: Unsupported SQL-Type '$ctype'")
           }
@@ -69,6 +69,7 @@ fun ResultSet.currentRecord(metaData: MetaData = kMapMetaData()): Record {
       is BooleanColumn -> this.getBoolean(kmColumn.label)
       is BigDecimalColumn -> this.getBigDecimal(kmColumn.label)
       is DateColumn -> this.getDate(kmColumn.label)
+      is DateTimeColumn -> this.getTimestamp(kmColumn.label)
       is DoubleColumn -> this.getDouble(kmColumn.label)
       is FloatColumn -> this.getFloat(kmColumn.label)
       is LongColumn -> this.getLong(kmColumn.label)

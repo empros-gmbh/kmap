@@ -2,8 +2,13 @@ package ch.empros.kmap
 
 import java.math.BigDecimal
 import java.sql.Date
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.*
+import java.time.ZoneId
+
+
 
 typealias Close = () -> Unit
 
@@ -27,8 +32,9 @@ object H2MemoryDatabaseData {
   val FLOAT_DISCOUNT = "float_discount".toUpperCase()
   val DOUBLE_DISCOUNT = "double_discount".toUpperCase()
   val SIZE = "size".toUpperCase()
-  val VALUATION = "vauation".toUpperCase()
-  val DOC ="doc".toUpperCase()
+  val VALUATION = "valuation".toUpperCase()
+  val DOC = "doc".toUpperCase()
+  val TIMESTAMP = "time_stamp".toUpperCase()
 
   val VAL_BIRTH_DATE = "1966-01-17"
   val VAL_FIRSTNAME = "Vorname"
@@ -39,9 +45,14 @@ object H2MemoryDatabaseData {
   val VAL_SIZE = 10L
   val VAL_VALUATION = BigDecimal(2.5)
   val VAL_DOC = "Clob-Inhalt, z.B. XML, HTML, etc."
+  val VAL_TIMESTAMP: LocalDateTime = Calendar.getInstance().let { calendar ->
+    calendar.set(2018, 2, 10, 10, 11, 30)
+    LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())
+  }
 
   @Throws(Exception::class)
-  @JvmStatic fun main(args: Array<String>) {
+  @JvmStatic
+  fun main(args: Array<String>) {
     try {
       val (rs, close) = ch.empros.kmap.H2MemoryDatabaseData.getCloseableResultSet()
 
@@ -77,8 +88,8 @@ object H2MemoryDatabaseData {
 
   private fun runSetupQueries(connection: java.sql.Connection, size: Int) {
 
-    val CreateQuery = "CREATE TABLE PERSON($ID int primary key, $FIRSTNAME varchar(100), $LASTNAME varchar(100), $ACTIVE boolean, $BIRTH_DATE date, $FLOAT_DISCOUNT real, $DOUBLE_DISCOUNT double, $SIZE bigint, $VALUATION decimal, $DOC clob)"
-    val InsertQuery = "INSERT INTO PERSON ($ID, $FIRSTNAME, $LASTNAME, $ACTIVE, $BIRTH_DATE, $FLOAT_DISCOUNT, $DOUBLE_DISCOUNT, $SIZE, $VALUATION, $DOC) values (?,?,?,?,?,?,?,?,?,?)"
+    val CreateQuery = "CREATE TABLE PERSON($ID int primary key, $FIRSTNAME varchar(100), $LASTNAME varchar(100), $ACTIVE boolean, $BIRTH_DATE date, $FLOAT_DISCOUNT real, $DOUBLE_DISCOUNT double, $SIZE bigint, $VALUATION decimal, $DOC clob, $TIMESTAMP timestamp)"
+    val InsertQuery = "INSERT INTO PERSON ($ID, $FIRSTNAME, $LASTNAME, $ACTIVE, $BIRTH_DATE, $FLOAT_DISCOUNT, $DOUBLE_DISCOUNT, $SIZE, $VALUATION, $DOC, $TIMESTAMP) values (?,?,?,?,?,?,?,?,?,?,?)"
 
     connection.autoCommit = false
 
@@ -98,6 +109,7 @@ object H2MemoryDatabaseData {
         setLong(8, VAL_SIZE.toLong())
         setBigDecimal(9, VAL_VALUATION)
         setClob(10, VAL_DOC.reader())
+        setTimestamp(11, Timestamp.valueOf(VAL_TIMESTAMP))
         executeUpdate()
       }
       close()

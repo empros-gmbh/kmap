@@ -2,6 +2,7 @@ package ch.empros.kmap
 
 import ch.empros.kmap.H2MemoryDatabaseData.ACTIVE
 import ch.empros.kmap.H2MemoryDatabaseData.BIRTH_DATE
+import ch.empros.kmap.H2MemoryDatabaseData.TIMESTAMP
 import ch.empros.kmap.H2MemoryDatabaseData.DOC
 import ch.empros.kmap.H2MemoryDatabaseData.DOUBLE_DISCOUNT
 import ch.empros.kmap.H2MemoryDatabaseData.FIRSTNAME
@@ -14,12 +15,14 @@ import ch.empros.kmap.H2MemoryDatabaseData.VAL_BIRTH_DATE
 import ch.empros.kmap.H2MemoryDatabaseData.VAL_FIRSTNAME
 import ch.empros.kmap.H2MemoryDatabaseData.VAL_LASTNAME
 import ch.empros.kmap.H2MemoryDatabaseData.VAL_SIZE
+import ch.empros.kmap.H2MemoryDatabaseData.VAL_TIMESTAMP
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
 import java.sql.Date
 import java.sql.ResultSet
+import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -107,6 +110,11 @@ class MetaDataTest : BaseTestFixture() {
     assertEquals(Long::class, (metaData[SIZE] as LongColumn).getVmType())
   }
 
+  @Test fun `Timestamp time_stamp`() {
+    assertTrue(metaData[TIMESTAMP] is DateTimeColumn)
+    assertEquals(LocalDateTime::class, (metaData[TIMESTAMP] as DateTimeColumn).getVmType())
+  }
+
   @Test fun `DecimalColumn valuation`() {
     assertTrue(metaData[VALUATION] is BigDecimalColumn, "Expected BigDecimalColumn but got: ${metaData[VALUATION]::class}")
     assertEquals(BigDecimal::class, (metaData[VALUATION] as BigDecimalColumn).getVmType())
@@ -127,15 +135,16 @@ class PageFromResultSetTest : BaseTestFixture() {
       val birthDate = toSqlDate(VAL_BIRTH_DATE)
       mapOf(ID to it, FIRSTNAME to "$VAL_FIRSTNAME $it", LASTNAME to "$VAL_LASTNAME $it",
             ACTIVE to true, BIRTH_DATE to birthDate.toString(),
-            DOUBLE_DISCOUNT to 1.5, FLOAT_DISCOUNT to .5f, SIZE to VAL_SIZE)
+            DOUBLE_DISCOUNT to 1.5, FLOAT_DISCOUNT to .5f, SIZE to VAL_SIZE, TIMESTAMP to VAL_TIMESTAMP)
     }.toList()
 
     val actual = page.records.map {
       mapOf<String, Any>(ID to it[ID], FIRSTNAME to it[FIRSTNAME], LASTNAME to it[LASTNAME],
                          ACTIVE to it[ACTIVE], BIRTH_DATE to it.value(BIRTH_DATE).toString(),
-                         DOUBLE_DISCOUNT to it[DOUBLE_DISCOUNT], FLOAT_DISCOUNT to it[FLOAT_DISCOUNT], SIZE to it[SIZE])
+                         DOUBLE_DISCOUNT to it[DOUBLE_DISCOUNT], FLOAT_DISCOUNT to it[FLOAT_DISCOUNT], SIZE to it[SIZE], TIMESTAMP to it[TIMESTAMP])
     }.toList()
 
+    println(actual)
     assertEquals(expected, actual)
   }
 }
