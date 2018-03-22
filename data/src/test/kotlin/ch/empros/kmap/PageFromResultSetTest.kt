@@ -22,7 +22,9 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.sql.Date
 import java.sql.ResultSet
+import java.sql.Timestamp
 import java.time.LocalDateTime
+import kotlin.math.exp
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -112,7 +114,7 @@ class MetaDataTest : BaseTestFixture() {
 
   @Test fun `Timestamp time_stamp`() {
     assertTrue(metaData[TIMESTAMP] is DateTimeColumn)
-    assertEquals(LocalDateTime::class, (metaData[TIMESTAMP] as DateTimeColumn).getVmType())
+    assertEquals(Timestamp::class, (metaData[TIMESTAMP] as DateTimeColumn).getVmType())
   }
 
   @Test fun `DecimalColumn valuation`() {
@@ -131,6 +133,7 @@ class PageFromResultSetTest : BaseTestFixture() {
   }
 
   @Test fun `Records contain expected data`() {
+    Timestamp(0).toLocalDateTime()
     val expected = IntRange(1, 5).map {
       val birthDate = toSqlDate(VAL_BIRTH_DATE)
       mapOf(ID to it, FIRSTNAME to "$VAL_FIRSTNAME $it", LASTNAME to "$VAL_LASTNAME $it",
@@ -144,7 +147,12 @@ class PageFromResultSetTest : BaseTestFixture() {
                          DOUBLE_DISCOUNT to it[DOUBLE_DISCOUNT], FLOAT_DISCOUNT to it[FLOAT_DISCOUNT], SIZE to it[SIZE], TIMESTAMP to it[TIMESTAMP])
     }.toList()
 
-    println(actual)
-    assertEquals(expected, actual)
+//    println(actual)
+    expected.forEachIndexed { index, rowData ->
+      val actualRowData = actual[index]
+      rowData.entries.forEach { cellEntry ->
+        assertEquals(cellEntry.value, actualRowData[cellEntry.key])
+      }
+    }
   }
 }

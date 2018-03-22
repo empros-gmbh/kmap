@@ -1,6 +1,5 @@
 package ch.empros.kmap
 
-import java.io.Reader
 import java.sql.ResultSet
 import java.sql.Types
 

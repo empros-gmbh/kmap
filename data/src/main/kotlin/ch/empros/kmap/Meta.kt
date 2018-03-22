@@ -2,6 +2,7 @@ package ch.empros.kmap
 
 import java.math.BigDecimal
 import java.sql.Date
+import java.sql.Timestamp
 import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
@@ -27,7 +28,7 @@ data class DateColumn(override val name: String, override val label: String) : K
 }
 
 data class DateTimeColumn(override val name: String, override val label: String) : KmColumn(name, label) {
-  override fun getVmType() = LocalDateTime::class
+  override fun getVmType() = Timestamp::class
 }
 
 data class StringColumn(override val name: ColumnName,

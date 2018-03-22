@@ -45,9 +45,9 @@ object H2MemoryDatabaseData {
   val VAL_SIZE = 10L
   val VAL_VALUATION = BigDecimal(2.5)
   val VAL_DOC = "Clob-Inhalt, z.B. XML, HTML, etc."
-  val VAL_TIMESTAMP: LocalDateTime = Calendar.getInstance().let { calendar ->
+  val VAL_TIMESTAMP: Timestamp = Calendar.getInstance().let { calendar ->
     calendar.set(2018, 2, 10, 10, 11, 30)
-    LocalDateTime.ofInstant(calendar.toInstant(), ZoneId.systemDefault())
+    Timestamp(calendar.timeInMillis)
   }
 
   @Throws(Exception::class)
@@ -109,7 +109,7 @@ object H2MemoryDatabaseData {
         setLong(8, VAL_SIZE.toLong())
         setBigDecimal(9, VAL_VALUATION)
         setClob(10, VAL_DOC.reader())
-        setTimestamp(11, Timestamp.valueOf(VAL_TIMESTAMP))
+        setTimestamp(11, VAL_TIMESTAMP)
         executeUpdate()
       }
       close()
