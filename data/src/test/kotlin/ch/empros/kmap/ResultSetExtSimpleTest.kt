@@ -9,8 +9,8 @@ class ResultSetExtSimpleTest {
     val (rs, close) = H2MemoryDatabaseData.getCloseableResultSet()
     close()
     assertFailsWith(IllegalStateException::class,
-                    "Closed ResultSet should cause exception",
-                    { rs.toPageThenClose() })
+                    "Closed ResultSet should cause exception"
+    ) { rs.toPageThenClose() }
   }
 
 }

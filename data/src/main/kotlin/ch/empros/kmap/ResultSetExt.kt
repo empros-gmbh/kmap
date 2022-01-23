@@ -4,7 +4,7 @@ import java.sql.ResultSet
 import java.sql.Types
 
 /**
- * Extension function that maps this [ResultSet]'s JDBC-based meta data to a kMap meta data object.
+ * Extension function that maps this [ResultSet]'s JDBC-based metadata to a kMap metadata object.
  */
 fun ResultSet.kMapMetaData(): MetaData =
   MetaData(
@@ -13,8 +13,7 @@ fun ResultSet.kMapMetaData(): MetaData =
         with(metaData) {
           val name = getColumnName(i)
           val label = getColumnLabel(i)
-          val ctype = getColumnType(i)
-          when (ctype) {
+          when (val cType = getColumnType(i)) {
             Types.BOOLEAN -> BooleanColumn(name, label)
             Types.CLOB -> ClobColumn(name, label)
             Types.DATE -> DateColumn(name, label)
@@ -25,7 +24,7 @@ fun ResultSet.kMapMetaData(): MetaData =
             Types.NUMERIC, Types.DECIMAL -> BigDecimalColumn(name, label)
             Types.TIMESTAMP -> DateTimeColumn(name, label)
             Types.VARCHAR, Types.NCHAR, Types.NVARCHAR, Types.LONGNVARCHAR, Types.LONGVARCHAR -> StringColumn(name, label, getColumnDisplaySize(i))
-            else -> throw IllegalArgumentException("KMap ResultSet Mapping: Unsupported SQL-Type '$ctype'")
+            else -> throw IllegalArgumentException("KMap ResultSet Mapping: Unsupported SQL-Type '$cType'")
           }
         }
       }
@@ -63,8 +62,7 @@ fun ResultSet.toPageThenClose(): Page {
 fun ResultSet.currentRecord(metaData: MetaData = kMapMetaData()): Record {
 
   val values = IntRange(0, metaData.colCount - 1).map { index ->
-    val kmColumn = metaData[index]
-    val value: Any? = when (kmColumn) {
+    val value: Any? = when (val kmColumn = metaData[index]) {
       is BooleanColumn -> this.getBoolean(kmColumn.label)
       is BigDecimalColumn -> this.getBigDecimal(kmColumn.label)
       is DateColumn -> this.getDate(kmColumn.label)

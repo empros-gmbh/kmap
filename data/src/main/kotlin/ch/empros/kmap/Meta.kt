@@ -3,7 +3,6 @@ package ch.empros.kmap
 import java.math.BigDecimal
 import java.sql.Date
 import java.sql.Timestamp
-import java.time.LocalDateTime
 import kotlin.reflect.KClass
 
 typealias ColumnName = String
@@ -13,7 +12,7 @@ data class ColumnLabel(private val value: String) : CharSequence by value {
 }
 
 /**
- * Describes a column's meta data.
+ * Describes a column's metadata.
  * Note: The distinction between [name] and [label] is important:
  * According to JDBC, the name represents the column name in the underlying table while the label
  * corresponds to a possible column alias used in the query.
@@ -72,7 +71,7 @@ class MetaData(cols: List<KmColumn>) {
 
   private val columns = cols.toList() // since cols could be a mutable list, we make a copy
   private val label2Index = columns.mapIndexed { i, column -> column.label to i }.toMap()
-  private val name2Column = columns.map { it.name to it }.toMap()
+  private val name2Column = columns.associateBy { it.name }
 
   val colCount = columns.size
 
@@ -84,9 +83,9 @@ class MetaData(cols: List<KmColumn>) {
     columns.forEach(action)
   }
 
-  fun indexOf(label: String): Int = label2Index.getOrElse(label, { throw IllegalArgumentException("Unknown label: $label") })
+  fun indexOf(label: String): Int = label2Index.getOrElse(label) { throw IllegalArgumentException("Unknown label: $label") }
 
-  fun byName(name: ColumnName): KmColumn = name2Column.getOrElse(name, { throw IllegalArgumentException("Unknown name: $name") })
+  fun byName(name: ColumnName): KmColumn = name2Column.getOrElse(name) { throw IllegalArgumentException("Unknown name: $name") }
 
   operator fun get(index: Int): KmColumn = columns[index]
 
